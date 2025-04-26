@@ -8,16 +8,15 @@ import retrofit2.Response
 
 class ChatViewModel : ViewModel() {
 
-    // LiveData to observe chat responses
     val chatResponses = MutableLiveData<List<String>>()
 
     private val openRouterService = RetrofitInstance.create(OpenRouterService::class.java)
 
     fun sendMessage(userMessage: String) {
         val chatRequest = ChatRequest(
-            model = "mistralai/mistral-7b-instruct",  // correct model name
+            model = "mistralai/mistral-7b-instruct",
             messages = listOf(
-                Message(role = "user", content = userMessage)  // send user message
+                Message(role = "user", content = userMessage)
             )
         )
 
@@ -28,11 +27,11 @@ class ChatViewModel : ViewModel() {
                     // Get the AI's reply
                     val aiReply = response.body()?.choices?.firstOrNull()?.message?.content
                     aiReply?.let {
-                        // Send both user message and AI reply to the UI
+
                         chatResponses.value = listOf(userMessage, it)
                     }
                 } else {
-                    // Handle error (for now, just log)
+                    
                     chatResponses.value = listOf("Error: ${response.message()}")
                 }
             }
